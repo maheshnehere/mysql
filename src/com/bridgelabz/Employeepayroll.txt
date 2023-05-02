@@ -1,0 +1,317 @@
+UC1. Ability to create a payroll service database.
+
+mysql> create database payroll_service;
+Query OK, 1 row affected (0.07 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+
+mysql> use payroll_service;
+Database changed
+
+mysql> select database();
++-----------------+
+| database()      |
++-----------------+
+| payroll_service |
++-----------------+
+1 row in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc2.Ability to create a employee payroll table in the payroll service database to manage employee payrolls.
+
+mysql> create table employee_payroll(Id int not null auto_increment,Name varchar(30) not null, Salary double not null, StartDate date not null, primary key(Id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc employee_payroll;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| Id        | int         | NO   | PRI | NULL    | auto_increment |
+| Name      | varchar(30) | NO   |     | NULL    |                |
+| Salary    | double      | NO   |     | NULL    |                |
+| StartDate | date        | NO   |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc3.Ability to create employee payroll data in the payroll service database as part of CRUD Operation.
+
+mysql> insert into employee_payroll(Name,Salary,StartDate)
+    -> values('Mahesh',30000,'2023-01-07'),
+    -> ('Nikhil',40000,'2023-02-15'),
+    -> ('Akanksha',47000,'2023-03-27'),
+    -> ('Prajwal',50000,'2023-05-12');
+Query OK, 4 rows affected (0.20 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+==================================================================================================================================================================================================
+
+Uc4.Ability to retrieve all the employee payroll data that is added to payroll service database.
+
+mysql> select * from employee_payroll;
++----+----------+--------+------------+
+| Id | Name     | Salary | StartDate  |
++----+----------+--------+------------+
+|  1 | Mahesh   |  30000 | 2023-01-07 |
+|  2 | Nikhil   |  40000 | 2023-02-15 |
+|  3 | Akanksha |  47000 | 2023-03-27 |
+|  4 | Prajwal  |  50000 | 2023-05-12 |
++----+----------+--------+------------+
+4 rows in set (0.03 sec)
+
+==================================================================================================================================================================================================
+
+Uc5.Ability to retrieve salary data for a particular employee as well as all employees who have joined
+    in a particular data range from the payroll service database.
+
+mysql> select salary from employee_payroll
+    -> where name = 'Nikhil';
++--------+
+| salary |
++--------+
+|  40000 |
++--------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from employee_payroll
+    -> where startdate between cast('2022-03-01' as date) and date(now());
++----+----------+--------+------------+
+| Id | Name     | Salary | StartDate  |
++----+----------+--------+------------+
+|  1 | Mahesh   |  30000 | 2023-01-07 |
+|  2 | Nikhil   |  40000 | 2023-02-15 |
+|  3 | Akanksha |  47000 | 2023-03-27 |
++----+----------+--------+------------+
+3 rows in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc6.Ability to add Gender to Employee Payroll Table and Update the Rows to reflect the correct Employee Gender.
+
+mysql> alter table employee_payroll add Gender char(1) not null after name;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+
+| Id | Name     | Gender | Salary | StartDate  |
++----+----------+--------+--------+------------+
+|  1 | Mahesh   |        |  30000 | 2023-01-07 |
+|  2 | Nikhil   |        |  40000 | 2023-02-15 |
+|  3 | Akanksha |        |  47000 | 2023-03-27 |
+|  4 | Prajwal  |        |  50000 | 2023-05-12 |
++----+----------+--------+--------+------------+
+4 rows in set (0.00 sec)
+
+mysql> update employee_payroll set Gender = 'M' where id = 1 and 3 and 4;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set Gender = 'F' where id = 3;
+Query OK, 1 row affected (0.18 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+
+| Id | Name     | Gender | Salary | StartDate  |
++----+----------+--------+--------+------------+
+|  1 | Mahesh   | M      |  30000 | 2023-01-07 |
+|  2 | Nikhil   | M      |  40000 | 2023-02-15 |
+|  3 | Akanksha | F      |  47000 | 2023-03-27 |
+|  4 | Prajwal  | M      |  50000 | 2023-05-12 |
++----+----------+--------+--------+------------+
+4 rows in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc7.Ability to find sum, average, min, max and number of male and female employees.
+
+1.Sum
+mysql> select sum(salary) from employee_payroll where gender = 'M' group by gender;
++-------------+
+| sum(salary) |
++-------------+
+|      120000 |
++-------------+
+1 row in set (0.02 sec)
+
+2.Average
+mysql> select avg(salary) from employee_payroll group by gender;
++-------------+
+| avg(salary) |
++-------------+
+|       40000 |
+|       47000 |
++-------------+
+2 rows in set (0.04 sec)
+
+3.Min
+mysql> select min(salary) from employee_payroll group by gender;
++-------------+
+| min(salary) |
++-------------+
+|       30000 |
+|       47000 |
++-------------+
+2 rows in set (0.00 sec)
+
+4.Max
+mysql> select max(salary) from employee_payroll group by gender;
++-------------+
+| max(salary) |
++-------------+
+|       50000 |
+|       47000 |
++-------------+
+2 rows in set (0.00 sec)
+
+5.count
+sql> select count(salary) from employee_payroll group by gender;
++---------------+
+| count(salary) |
++---------------+
+|             3 |
+|             1 |
++---------------+
+2 rows in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc8.Ability to extend employee_payroll data to store employee information like employee phone, address and department - Ensure employee department
+
+mysql> alter table employee_payroll
+    -> add PhoneNumber int(15) not null, add Address varchar(30) not null, add Department varchar(30) not null;
+Query OK, 0 rows affected, 1 warning (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+-------------+---------+------------+
+| Id | Name     | Gender | Salary | StartDate  | PhoneNumber | Address | Department |
++----+----------+--------+--------+------------+-------------+---------+------------+
+|  1 | Mahesh   | M      |  30000 | 2023-01-07 |           0 |         |            |
+|  2 | Nikhil   | M      |  40000 | 2023-02-15 |           0 |         |            |
+|  3 | Akanksha | F      |  47000 | 2023-03-27 |           0 |         |            |
+|  4 | Prajwal  | M      |  50000 | 2023-05-12 |           0 |         |            |
++----+----------+--------+--------+------------+-------------+---------+------------+
+4 rows in set (0.00 sec)
+
+mysql> update employee_payroll
+    -> set PhoneNumber = 706698737, Address = 'Nimshirgaon', Department = 'Design'
+    -> where id = 1;
+Query OK, 1 row affected (0.09 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll
+    -> set PhoneNumber = 798562341 , Address = 'Ganeshwadi', Department = 'QualityControl'
+    -> where id = 2;
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll
+    -> set PhoneNumber = 945871235 , Address = 'Kolhapur', Department = 'Testing'
+    -> where id = 3;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set PhoneNumber = 489658321 , Address = 'Sangli', Department = 'R&D'
+    -> where id = 4;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+-------------+-------------+----------------+
+| Id | Name     | Gender | Salary | StartDate  | PhoneNumber | Address     | Department     |
++----+----------+--------+--------+------------+-------------+-------------+----------------+
+|  1 | Mahesh   | M      |  30000 | 2023-01-07 |   706698737 | Nimshirgaon | Design         |
+|  2 | Nikhil   | M      |  40000 | 2023-02-15 |   798562341 | Ganeshwadi  | QualityControl |
+|  3 | Akanksha | F      |  47000 | 2023-03-27 |   945871235 | Kolhapur    | Testing        |
+|  4 | Prajwal  | M      |  50000 | 2023-05-12 |   489658321 | Sangli      | R&D            |
++----+----------+--------+--------+------------+-------------+-------------+----------------+
+4 rows in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc9 = Ability to extend employee_payroll table to have Basic Pay, Deductions, Taxable Pay, Income Tax, Net Pay
+
+mysql> alter table employee_payroll
+    -> add BasicPay double not null, add Deductions double not null, add TaxablePay double not null, add IncomeTax double not null, add NetPay double not null;
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+| Id | Name     | Gender | Salary | StartDate  | PhoneNumber | Address     | Department     | BasicPay | Deductions | TaxablePay | IncomeTax | NetPay |
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+|  1 | Mahesh   | M      |  30000 | 2023-01-07 |   706698737 | Nimshirgaon | Design         |        0 |          0 |          0 |         0 |      0 |
+|  2 | Nikhil   | M      |  40000 | 2023-02-15 |   798562341 | Ganeshwadi  | QualityControl |        0 |          0 |          0 |         0 |      0 |
+|  3 | Akanksha | F      |  47000 | 2023-03-27 |   945871235 | Kolhapur    | Testing        |        0 |          0 |          0 |         0 |      0 |
+|  4 | Prajwal  | M      |  50000 | 2023-05-12 |   489658321 | Sangli      | R&D            |        0 |          0 |          0 |         0 |      0 |
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+
+mysql> update employee_payroll set BasicPay = 30000, Deductions = 3000, TaxablePay = 2000, IncomeTax = 200, NetPay = 27000
+    -> where id = 1;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set BasicPay = 40000, Deductions = 3500, TaxablePay = 3000, IncomeTax = 500, NetPay = 36000
+    -> where id = 2;
+Query OK, 1 row affected (0.05 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set BasicPay = 47000, Deductions = 5000, TaxablePay = 4000, IncomeTax = 700, NetPay = 41300
+    -> where id = 3;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee_payroll set BasicPay = 50000, Deductions = 6000, TaxablePay = 5000, IncomeTax = 900, NetPay = 44000
+    -> where id = 4;
+Query OK, 1 row affected (0.13 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+| Id | Name     | Gender | Salary | StartDate  | PhoneNumber | Address     | Department     | BasicPay | Deductions | TaxablePay | IncomeTax | NetPay |
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+|  1 | Mahesh   | M      |  30000 | 2023-01-07 |   706698737 | Nimshirgaon | Design         |    30000 |       3000 |       2000 |       200 |  27000 |
+|  2 | Nikhil   | M      |  40000 | 2023-02-15 |   798562341 | Ganeshwadi  | QualityControl |    40000 |       3500 |       3000 |       500 |  36000 |
+|  3 | Akanksha | F      |  47000 | 2023-03-27 |   945871235 | Kolhapur    | Testing        |    47000 |       5000 |       4000 |       700 |  41300 |
+|  4 | Prajwal  | M      |  50000 | 2023-05-12 |   489658321 | Sangli      | R&D            |    50000 |       6000 |       5000 |       900 |  44000 |
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+==================================================================================================================================================================================================
+
+Uc10. If a Salary is now going to be updated multiple rows has to be updated creating unnecessary redundancy
+
+mysql> update employee_payroll set NetPay = BasicPay-Deductions-IncomeTax;
+Query OK, 2 rows affected (0.08 sec)
+Rows matched: 4  Changed: 2  Warnings: 0
+
+mysql> select * from employee_payroll;
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+| Id | Name     | Gender | Salary | StartDate  | PhoneNumber | Address     | Department     | BasicPay | Deductions | TaxablePay | IncomeTax | NetPay |
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+|  1 | Mahesh   | M      |  30000 | 2023-01-07 |   706698737 | Nimshirgaon | Design         |    30000 |       3000 |       2000 |       200 |  26800 |
+|  2 | Nikhil   | M      |  40000 | 2023-02-15 |   798562341 | Ganeshwadi  | QualityControl |    40000 |       3500 |       3000 |       500 |  36000 |
+|  3 | Akanksha | F      |  47000 | 2023-03-27 |   945871235 | Kolhapur    | Testing        |    47000 |       5000 |       4000 |       700 |  41300 |
+|  4 | Prajwal  | M      |  50000 | 2023-05-12 |   489658321 | Sangli      | R&D            |    50000 |       6000 |       5000 |       900 |  43100 |
++----+----------+--------+--------+------------+-------------+-------------+----------------+----------+------------+------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+==========================================================================

@@ -1,0 +1,218 @@
+Uc1.Ability to create a Address Book Service DB.
+
+mysql> create database addressbook_service;
+Query OK, 1 row affected (0.13 sec)
+
+mysql> use addressbook_service;
+Database changed
+
+mysql> select database();
++---------------------+
+| database()          |
++---------------------+
+| addressbook_service |
++---------------------+
+1 row in set (0.00 sec)
+
+====================================================================================================================================================================================
+
+Uc2.Ability to create a Address Book Table with first and last names, address, city,
+     state, zip, phone number  and email as its attributes.
+
+mysql> create table Address_Book(
+    -> FirstName varchar(20) not null,
+    -> LastName varchar(20) not null,
+    -> Address varchar(50) not null,
+    -> City varchar(20) not null,
+    -> State varchar(20) not null,
+    -> Zip int not null,
+    -> PhoneNumber long not null,
+    -> Email varchar(30) not null);
+Query OK, 0 rows affected (1.71 sec)
+
+mysql> desc Address_Book;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| FirstName   | varchar(20) | NO   |     | NULL    |       |
+| LastName    | varchar(20) | NO   |     | NULL    |       |
+| Address     | varchar(50) | NO   |     | NULL    |       |
+| City        | varchar(20) | NO   |     | NULL    |       |
+| State       | varchar(20) | NO   |     | NULL    |       |
+| Zip         | int         | NO   |     | NULL    |       |
+| PhoneNumber | mediumtext  | NO   |     | NULL    |       |
+| Email       | varchar(30) | NO   |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+8 rows in set (0.14 sec)
+
+====================================================================================================================================================================================
+
+Uc3.Ability to insert new Contacts to Address Book
+
+mysql> insert into Address_Book(FirstName, LastName, Address, City, State, Zip, PhoneNumber,Email)
+    -> values('Mahesh','Nehere','Bhosari','Pune','Maharashtra',411039,7020249009,'maheshnehere93@gmail.com'),
+    ->       ('Sandesh','Nehere','Chakan','Pune','Maharashtra',411039,6775335678,'sandesh@gmail.com');
+Query OK, 2 rows affected (0.22 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> select * from Address_book;
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| Mahesh    | Nehere   | Bhosari     | Pune     | Maharashtra | 411039 | 7020249009  | maheshnehere93@gmail.com     |
+| Sandesh   | Nehere   | Chakan      | pune     | Maharashtra | 411039 | 6775335678  | sandesh@gmail.com            |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+2 rows in set (0.00 sec)
+
+====================================================================================================================================================================================
+
+Uc4.Ability to edit existing contact person using their name.
+
+mysql> update Address_Book
+    -> set FirstName = 'Sanmit',
+    -> LastName = 'Patil',
+    -> Address = 'Pune',
+    -> City = 'Pune',
+    -> State = 'Maharashtra',
+    -> Zip  = 123456,
+    -> PhoneNumber = 8569742365,
+    -> Email = 'sanmitpatil323@gmail.com'
+    -> where FirstName = 'Nikhil';
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Address_book;
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| Mahesh    | Nehere   | Bhosari     | Pune     | Maharashtra | 411039 | 7020249009  | maheshnehere93@gmail.com     |
+| Sanmit    | Patil    | Pune        | Pune     | Maharashtra | 123456 | 8569742365  | sanmitpatil323@gmail.com     |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+2 rows in set (0.00 sec)
+
+====================================================================================================================================================================================
+
+Uc5. Ability to delete a person using person's name
+
+mysql> delete from address_book
+    -> where FirstName = 'Sanmit';
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from address_book;
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| Mahesh    | Nehere   | Bhosari     | Pune     | Maharashtra | 411039 | 7020249009  | maheshnehere93@gmail.com     |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+1 row in set (0.00 sec)
+
+====================================================================================================================================================================================
+
+Uc6. Ability to Retrieve Person belonging to a City or State from the Address Book
+
+mysql> insert into Address_Book(FirstName, LastName, Address, City, State, Zip, PhoneNumber,Email)
+    -> values('Nikhil','Birnale','Jaysingpur','Kolhapur','Maharashtra',416101,796541235,'nikhil@gmail.com');
+Query OK, 1 row affected (0.35 sec)
+
+mysql> select * from address_book;
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| Mahesh    | Nehere   | Bhosari     | Pune     | Maharashtra | 416101 | 7066987376  | abhishek.magdum.07@gmail.com |
+| Nikhil    | Birnale  | Jaysingpur  | Kolhapur | Maharashtra | 416101 | 796541235   | nikhil@gmail.com             |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from address_book
+    -> where City = 'Kolhapur';
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+| Mahesh    | Nehere   | Bhosari     | Pune     | Maharashtra | 411039 | 7020249009  | maheshnehere93@gmail.com     |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+
+1 row in set (0.00 sec)
+
+====================================================================================================================================================================================
+
+Uc7. Ability to understand the size of address book by City and State
+
+mysql> SELECT city, state, COUNT(*) as total FROM address_book GROUP BY city, state ORDER BY total DESC;
++----------+-------------+-------+
+| city     | state       | total |
++----------+-------------+-------+
+| Kolhapur | Maharashtra |     1 |
+| Pune     | Maharashtra |     1 |
++----------+-------------+-------+
+2 rows in set (0.13 sec)
+
+====================================================================================================================================================================================
+
+Uc8.Ability to retrieve entries sorted alphabetically by Person’s name for a given city
+
+
+mysql> select * from address_book
+    -> where city = 'pune'
+    -> order by FirstName ASC;
++-----------+----------+------------+------+-------------+--------+-------------+------------------+
+| FirstName | LastName | Address    | City | State       | Zip    | PhoneNumber | Email            |
++-----------+----------+------------+------+-------------+--------+-------------+------------------+
+| Nikhil    | Birnale  | Jaysingpur | Pune | Maharashtra | 416101 | 796541235   | nikhil@gmail.com |
++-----------+----------+------------+------+-------------+--------+-------------+------------------+
+1 row in set (0.01 sec)
+
+====================================================================================================================================================================================
+
+Uc9. Ability to identify each Address Book with name and Type.
+  - Here the type could Family, Friends, Profession, etc
+  - Alter Address Book to add type.
+
+
+mysql> alter table address_book
+    -> add Type varchar(15);
+Query OK, 0 rows affected (5.45 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from address_book;
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        | Type |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+------+
+| Mahesh    | Nehere   | Bhosari     | Pune     | Maharashtra | 411039 | 7020249009  | maheshnehere93@gmail.com     | NULL |
+| Nikhil    | Birnale  | Jaysingpur  | Pune     | Maharashtra | 416101 | 796541235   | nikhil@gmail.com             | NULL |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+------+
+2 rows in set (0.00 sec)
+
+mysql> update address_book
+    -> set type = 'Friends'
+    -> where FirstName = 'Abhishek';
+Query OK, 1 row affected (0.56 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update address_book
+    -> set type = 'Family'
+    -> where FirstName = 'Nikhil';
+Query OK, 1 row affected (0.18 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from address_book;
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+---------+
+| FirstName | LastName | Address     | City     | State       | Zip    | PhoneNumber | Email                        | Type    |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+---------+
+| Mahesh    | Nehere   | Bhosari     | pune     | Maharashtra | 411039 | 7020249009  | maheshnehere93@gmail.com     | Friends |
+| Nikhil    | Birnale  | Jaysingpur  | Pune     | Maharashtra | 416101 | 796541235   | nikhil@gmail.com             | Family  |
++-----------+----------+-------------+----------+-------------+--------+-------------+------------------------------+---------+
+2 rows in set (0.00 sec)
+
+====================================================================================================================================================================================
+
+Uc10. Ability to get number of contact persons
+
+mysql> select phonenumber from address_book;
++-------------+
+| phonenumber |
++-------------+
+| 7020249009  |
+| 796541235   |
++-------------+
+2 rows in set (0.02 sec)
+
+====================================================================================================================================================================================
